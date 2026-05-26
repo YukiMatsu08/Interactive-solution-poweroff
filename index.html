@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ドクタードルフィン - PC救急箱</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app-container">
+    <!-- 左側：診断メインパネル -->
+    <div id="main-panel">
+        <!-- 画像が必要なステップのみ表示されるエリア -->
+        <div id="guide-area">
+            <img id="guide-img" src="" alt="手順解説">
+        </div>
+        
+        <!-- ドクターのセリフ表示エリア -->
+        <div id="speech-bubble">
+            <div id="message">診察を開始します...</div>
+        </div>
+
+        <!-- 選択肢ボタンの表示エリア -->
+        <div id="options">
+            <!-- JavaScriptによって動的に生成されます -->
+        </div>
+    </div>
+
+    <!-- 右側：ドクタードルフィン（固定配置） -->
+    <div id="doctor-area">
+        <img src="assets/dr_dolphin.png" class="doctor-img" alt="ドクタードルフィン">
+        <br>
+        <div class="doctor-name">ドクタードルフィン</div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
