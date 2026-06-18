@@ -1,82 +1,70 @@
 /**
- * 診断ステップの定義
+ * 診断ステップの定義（パソコンの動作が重い 専用版）
  * doctorImage: そのステップで表示するドクターの画像
  */
 const steps = {
+  // === トップメニュー（ここから直接スタート） ===
   home: {
-    text: "やあ、ボクはドクタードルフィン。パソコンの診察はお任せして！何か困ったことはあるかな？",
+    text: "やあ、ボクはドクタードルフィン。パソコンの動作が重くて困っているんだね？ボクが原因を診てあげるから、いくつか教えておくれ！",
     doctorImage: "assets/dr_dolphin.png",
     options: [
-      { text: "電源が入らないんだ…", next: "q_lamp" },
+      { text: "診察をお願いする", next: "q_heavy_timing" },
       { text: "なんでもないよ（さよなら）", next: "exit" }
     ]
   },
-  q_lamp: {
-    text: "それは大変だ！まずは本体を診てみよう。電源ボタンを押した時、ランプは1ミリも光らないかな？",
-    doctorImage: "assets/dr_comfortable.png", // 最初は余裕を見せて安心させる
-    options: [
-      { text: "全く光らない", next: "q_outlet" },
-      { text: "光る、または音がする", next: "q_screen" }
-    ]
-  },
-  q_outlet: {
-    text: "コンセントは壁にしっかり刺さってるかな？タップのスイッチが切れてたりしない？",
-    image: "assets/guide_outlet.png",
-    doctorImage: "assets/dr_think.png", // 具体的なチェックでは真剣な表情
-    options: [
-      { text: "刺さってるしONだよ", next: "q_long_press" },
-      { text: "あ、抜けてたかも…", next: "result_fix" }
-    ]
-  },
-  q_long_press: {
-    text: "「放電」を試してみよう！全てのケーブルを抜いてから、電源ボタンを10秒以上長押ししてね。",
-    image: "assets/guide_discharge.png",
-    doctorImage: "assets/dr_comfortable.png", // 手間のかかる作業なので、優しく余裕のある顔で促す
-    options: [
-      { text: "ついた！直ったよ！", next: "result_fix" },
-      { text: "やっぱりダメみたい", next: "result_hw_broken" }
-    ]
-  },
-  q_screen: {
-    text: "なるほど。ファンが回る音や、ピピッと音（ビープ音）は聞こえるかな？",
+
+  // === 動作が重いルートの切り分け ===
+  q_heavy_timing: {
+    text: "まずは重くなるタイミングを調べよう。それは「電源を入れた直後の起動時からずっと」かな？それとも「インターネットやブラウザを開いたとき」に特に感じる？",
     doctorImage: "assets/dr_think.png",
     options: [
-      { text: "聞こえる", next: "q_monitor_check" },
-      { text: "聞こえない", next: "q_long_press" }
+      { text: "いつでも、起動直後からずっと重い", next: "q_task_manager" },
+      { text: "ネットやブラウザを開くと重くなる", next: "q_browser_tabs" }
     ]
   },
-  q_monitor_check: {
-    text: "音はするんだね。じゃあ、画面に何かロゴや文字は見える？それとも真っ暗？",
-    doctorImage: "assets/dr_comfortable.png", // 状況が絞れてきたので少し余裕を見せる
+  q_task_manager: {
+    text: "ずっと重いんだね。Ctrl + Shift + Esc キーを同時に押して「タスクマネージャー」を開いてみて。CPUやメモリのグラフが100%近くになっていないかな？",
+    image: "assets/guide_taskmanager.png",
+    doctorImage: "assets/dr_think.png",
     options: [
-      { text: "ロゴや青い画面が出る", next: "result_os_issue" },
-      { text: "真っ暗なままだよ", next: "result_monitor_issue" }
+      { text: "100%近くになっている項目がある", next: "result_background_app" },
+      { text: "グラフは低いのに、なぜかモッサリする", next: "result_drive_decay" }
     ]
   },
+  q_browser_tabs: {
+    text: "ネットのときだね！ブラウザのタブをたくさん（10個以上など）開きっぱなしにしていたり、動画を何本も同時に読み込んだりしていないかな？",
+    doctorImage: "assets/dr_comfortable.png",
+    options: [
+      { text: "あ、結構たくさん開いてるかも…", next: "result_heavy_tabs" },
+      { text: "タブは少ないのに、読み込みが遅いんだ", next: "result_network_heavy" }
+    ]
+  },
+
+  // === 診断結果・共通メッセージ ===
   exit: {
     text: "そっか、よかった！また何かあったらいつでも呼んでね。バイバイ！",
     doctorImage: "assets/dr_bye.png",
     options: [{ text: "もう一度相談する", next: "home" }]
   },
-  result_fix: {
-    text: "やったね！解決してボクも嬉しいよ。大事に使ってあげてね！",
+  result_background_app: {
+    text: "裏で重いアプリが動いているか、Windowsのアップデートが自動で走っているのかも。しばらく放置するか、不要なアプリを終了してみてね。",
     doctorImage: "assets/dr_eureka.png",
-    options: [{ text: "トップへ戻る", next: "home" }]
+    options: [{ text: "最初からやり直す", next: "home" }]
   },
-  result_os_issue: {
-    text: "画面に反応があるなら、本体は生きてるよ！これはWindowsなどのソフトの不具合の可能性が高いね。",
+  result_drive_decay: {
+    text: "グラフは低いのに重いなら、ストレージ（HDDやSSD）が寿命で劣化しているか、空き容量が完全に不足しているかも。買い替えやディスククリーンアップを考えてみてね。",
+    doctorImage: "assets/dr_think.png",
+    options: [{ text: "最初からやり直す", next: "home" }]
+  },
+  result_heavy_tabs: {
+    text: "やっぱり！ブラウザはタブを増やすほど大量のメモリを消費するんだ。使わないタブをこまめに閉じると、びっくりするくらい軽くなるよ！",
     doctorImage: "assets/dr_eureka.png",
-    options: [{ text: "トップへ戻る", next: "home" }]
+    options: [{ text: "最初からやり直す", next: "home" }]
   },
-  result_monitor_issue: {
-    text: "音はするのに映らないなら、モニターの故障か、メモリの接触不良かもしれないね。一度専門家に診てもらったほうがいいかも。",
+  result_network_heavy: {
+    text: "それはパソコン本体ではなく、ネット回線やWi-Fiの電波が弱くなっている可能性が高いね。ルーターを再起動してみると直るかもしれないよ！",
     doctorImage: "assets/dr_think.png",
-    options: [{ text: "トップへ戻る", next: "home" }]
-  },
-  result_hw_broken: {
-    text: "うーん、放電してもダメなら、電源ユニットやマザーボードが故障している重症の可能性があるよ…。修理を検討してみてね。",
-    doctorImage: "assets/dr_think.png",
-    options: [{ text: "トップへ戻る", next: "home" }]
+    options: [{ text: "最初からやり直す", next: "home" }]
   }
 };
 
